@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据可视化</title>
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <header>
+      <h1>人体肿瘤的数据分析与可视化网站-ECharts</h1>
+      <nav class="main-nav">
+            <a href="index.html" style="color: rgb(214, 255, 9); text-decoration: none;">首页</a>
+            <a href="cyberpunk-dashboard.html" style="color: rgb(214, 255, 9); text-decoration: none;">主控面板</a>
+            <a href="cyberpunk-analytics.html" style="color: rgb(214, 255, 9); text-decoration: none;">数据分析</a>
+            <a href="prediction model.html" style="color: rgb(214, 255, 9); text-decoration: none;">预测模型</a>
+            <a href="treatment-path.html" style="color: rgb(214, 255, 9); text-decoration: none;">治疗路径</a>
+            <a href="patient.html" style="color: rgb(214, 255, 9); text-decoration: none;">医生简介</a>
+      </nav>
+      <div class="showTime">当前时间：2025年1月10-0时54分14秒</div>
+      <script>
+        var t = null;
+        t = setTimeout(time, 1000); //开始运行
+        function time() {
+          clearTimeout(t); //清除定时器
+          dt = new Date();
+          var y = dt.getFullYear();
+          var mt = dt.getMonth() + 1;
+          var day = dt.getDate();
+          var h = dt.getHours(); //获取时
+          var m = dt.getMinutes(); //获取分
+          var s = dt.getSeconds(); //获取秒
+          document.querySelector(".showTime").innerHTML =
+            "当前时间：" +
+            y +
+            "年" +
+            mt +
+            "月" +
+            day +
+            "-" +
+            h +
+            "时" +
+            m +
+            "分" +
+            s +
+            "秒";
+          t = setTimeout(time, 1000); //设定定时器，循环运行
+        }
+      </script>
+    </header>
+    <section class="mainbox">
+      <div class="column">
+        <div class="panel bar">
+          <h2>
+            柱状图-患者BMI平均数图 <a href="javascript:;">2024</a>
+            <a href="javacript:;"> 2020</a>
+          </h2>
+          <div class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line">
+          <h2>折线图-人员变化</h2>
+          <div class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel pie">
+          <h2>饼形图-年龄分布</h2>
+          <div class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="no">
+          <div class="no-hd">
+            <ul>
+              <li>1258</li>
+              <li>5580</li>
+            </ul>
+          </div>
+          <div class="no-bd">
+            <ul>
+              <li>当前看诊人数</li>
+              <li>等待看诊人数</li>
+            </ul>
+          </div>
+        </div>
+        <div class="map">
+          <div class="chart"></div>
+          <div class="map1"></div>
+          <div class="map2"></div>
+          <div class="map3"></div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="panel bar1">
+          <h2>柱状图-疾病类型分布</h2>
+          <div class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line1">
+          <h2>折线图-男女性别患病对比</h2>
+          <div class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel pie1">
+          <h2>饼形图-各年龄段患病占比</h2>
+          <div class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+    </section>
+    <div class="action-buttons">
+      <button class="btn data-export" onclick="exportData()">
+          <svg class="icon" viewBox="0 0 24 24" width="18" height="18">
+              <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+          </svg>
+          导出数据
+      </button>
+      <button class="btn emergency-call" onclick="handleEmergency()">
+          <svg class="icon" viewBox="0 0 24 24" width="18" height="18">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-3H9V7h2v6z"/>
+          </svg>
+          紧急联络
+      </button>
+  </div>
+    <script src="js/flexible.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

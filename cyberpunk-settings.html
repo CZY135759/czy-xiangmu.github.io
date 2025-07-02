@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 </title>
+    <link rel="stylesheet" href="css/patient.css">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-purple: #9d00ff;
+            --neon-pink: #ff00f7;
+            --neon-green: #39ff14;
+            --dark-bg: #0f0f17;
+            --darker-bg: #070709;
+            --panel-bg: rgba(25, 25, 35, 0.7);
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(0, 255, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 75% 70%, rgba(157, 0, 255, 0.1) 0%, transparent 40%);
+            line-height: 1.6;
+        }
+        .settings-container {
+            padding: 30px;
+            max-width: 600px;
+            margin: 40px auto;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        h2 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+            border-bottom: 1px solid var(--neon-blue);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .setting-group {
+            margin-bottom: 28px;
+        }
+        .setting-label {
+            color: var(--neon-purple);
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 500;
+        }
+        .setting-control {
+            margin-top: 8px;
+        }
+        select, input[type="checkbox"] {
+            padding: 10px;
+            border: 1px solid rgba(157, 0, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(15, 15, 25, 0.6);
+            color: #e0e0e0;
+            font-size: 1em;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+        select:focus {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+            outline: none;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            vertical-align: middle;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            transition: .4s;
+            border-radius: 26px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+        input:checked + .slider {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        .cyber-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        .cyber-button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .cyber-button:hover {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>肿瘤诊疗实时查询系统</h1>
+        <nav class="main-nav">
+            <a href="index.html" style="color: rgb(214, 255, 9); text-decoration: none;">首页</a>
+            <a href="cyberpunk-dashboard.html" style="color: rgb(214, 255, 9); text-decoration: none;">主控面板</a>
+            <a href="cyberpunk-analytics.html" style="color: rgb(214, 255, 9); text-decoration: none;">数据分析</a>
+            <a href="prediction model.html" style="color: rgb(214, 255, 9); text-decoration: none;">预测模型</a>
+            <a href="treatment-path.html" style="color: rgb(214, 255, 9); text-decoration: none;">治疗路径</a>
+            <a href="patient.html" style="color: rgb(214, 255, 9); text-decoration: none;">病人查询</a>
+        </nav>
+        <div class="showTime">当前时间：</div>
+        <script>
+            var t = null;
+            t = setTimeout(time, 1000);
+            function time() {
+                clearTimeout(t);
+                dt = new Date();
+                var y = dt.getFullYear();
+                var mt = dt.getMonth() + 1;
+                var day = dt.getDate();
+                var h = dt.getHours();
+                var m = dt.getMinutes();
+                var s = dt.getSeconds();
+                document.querySelector(".showTime").innerHTML =
+                    "当前时间：" +
+                    y +
+                    "年" +
+                    mt +
+                    "月" +
+                    day +
+                    "-" +
+                    h +
+                    "时" +
+                    m +
+                    "分" +
+                    s +
+                    "秒";
+                t = setTimeout(time, 1000);
+            }
+        </script>
+    </header>
+    <div class="settings-container">
+        <h2>系统设置</h2>
+        <div class="setting-group">
+            <label class="setting-label" for="themeSelect">主题切换</label>
+            <select id="themeSelect" class="setting-control">
+                <option value="cyberpunk">赛博朋克</option>
+                <option value="light">明亮</option>
+                <option value="dark">暗黑</option>
+            </select>
+        </div>
+        <div class="setting-group">
+            <label class="setting-label" for="langSelect">语言选择</label>
+            <select id="langSelect" class="setting-control">
+                <option value="zh">简体中文</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <div class="setting-group">
+            <label class="setting-label">消息通知</label>
+            <label class="switch">
+                <input type="checkbox" id="notifySwitch" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="setting-group">
+            <label class="setting-label">自动更新</label>
+            <label class="switch">
+                <input type="checkbox" id="autoUpdateSwitch">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    <div class="cyber-buttons">
+        <button class="cyber-button" onclick="window.location.href='index.html'">返回主页</button>
+        <button class="cyber-button" onclick="saveSettings()">保存设置</button>
+    </div>
+    <script>
+        function saveSettings() {
+            alert('设置已保存！');
+        }
+    </script>
+</body>
+</html> 

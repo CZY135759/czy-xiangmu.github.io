@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平台交流</title>
+    <link rel="stylesheet" href="css/patient.css">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-purple: #9d00ff;
+            --neon-pink: #ff00f7;
+            --neon-green: #39ff14;
+            --dark-bg: #0f0f17;
+            --darker-bg: #070709;
+            --panel-bg: rgba(25, 25, 35, 0.7);
+        }
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            background: 
+                linear-gradient(rgba(15, 15, 23, 0.7), rgba(15, 15, 23, 0.7)),
+                url(images/bg2.jpeg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 35%, rgba(0, 255, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 75% 70%, rgba(157, 0, 255, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+        
+        .doctors-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .filter-select:focus {
+            border-color: var(--neon-blue);
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .search-box input {
+            padding: 10px 15px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--neon-blue);
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .search-box button {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            margin-left: 10px;
+        }
+        
+        .search-box button:hover {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+        
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .doctor-card {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.2);
+        }
+        
+        .doctor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            z-index: 1;
+        }
+        
+        .doctor-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .doctor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .doctor-card:hover .doctor-image img {
+            transform: scale(1.05);
+        }
+        
+        .doctor-details {
+            padding: 20px;
+        }
+        
+        .doctor-name {
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        
+        .doctor-title {
+            color: var(--neon-green);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .doctor-department {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .doctor-expertise {
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .doctor-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+        
+        .doctor-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .doctor-btn {
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .doctor-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .primary-btn {
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            border: none;
+        }
+        
+        .primary-btn:hover {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+        
+        .featured-doctor {
+            display: flex;
+            background: var(--panel-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .featured-doctor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            z-index: 1;
+        }
+        
+        .featured-image {
+            flex: 0 0 300px;
+        }
+        
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .featured-details {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .featured-name {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+        
+        .featured-title {
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .featured-department {
+            color: var(--neon-purple);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .featured-bio {
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .featured-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .featured-stat {
+            margin-right: 25px;
+        }
+        
+        .availability {
+            display: inline-block;
+            background: rgba(57, 255, 20, 0.2);
+            color: var(--neon-green);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .availability.limited {
+            background: rgba(255, 165, 0, 0.2);
+            color: orange;
+        }
+        
+        .availability.unavailable {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+        }
+        
+        /* 动态效果 */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); }
+        }
+        
+        .doctor-card:hover::before {
+            animation: pulse 1.5s infinite;
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            padding: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>肿瘤诊疗实时查询系统</h1>
+        <nav class="main-nav">
+            <a href="index.html" style="color: rgb(214, 255, 9); text-decoration: none;">首页</a>
+            <a href="cyberpunk-dashboard.html" style="color: rgb(214, 255, 9); text-decoration: none;">主控面板</a>
+            <a href="cyberpunk-analytics.html" style="color: rgb(214, 255, 9); text-decoration: none;">数据分析</a>
+            <a href="cyberpunk-patient-profile.html" style="color: rgb(214, 255, 9); text-decoration: none;">患者资料</a>
+            <a href="prediction model.html" style="color: rgb(214, 255, 9); text-decoration: none;">预测模型</a>
+            <a href="treatment-path.html" style="color: rgb(214, 255, 9); text-decoration: none;">治疗路径</a>
+        </nav>
+        <div class="showTime">当前时间：2025年1月10-0时54分14秒</div>
+        <script>
+            var t = null;
+            t = setTimeout(time, 1000); 
+            function time() {
+                clearTimeout(t); 
+                dt = new Date();
+                var y = dt.getFullYear();
+                var mt = dt.getMonth() + 1;
+                var day = dt.getDate();
+                var h = dt.getHours(); 
+                var m = dt.getMinutes(); 
+                var s = dt.getSeconds(); 
+                document.querySelector(".showTime").innerHTML =
+                    "当前时间：" +
+                    y +
+                    "年" +
+                    mt +
+                    "月" +
+                    day +
+                    "-" +
+                    h +
+                    "时" +
+                    m +
+                    "分" +
+                    s +
+                    "秒";
+                t = setTimeout(time, 1000); 
+            }
+        </script>
+        <div class="real-time-status">
+            在线医生：<span id="onlineDoctors">15</span>人 | 
+            今日门诊：<span id="todayAppointments">42</span>人
+        </div>
+    </header>
+
+    <div class="doctors-container">
+        <h2 style="color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); margin-bottom: 30px;">专家医师团队</h2>
+        
+        <div class="featured-doctor">
+            <div class="featured-image">
+                <img src="https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg" alt="王明教授">
+            </div>
+            <div class="featured-details">
+                <h3 class="featured-name">Steven 教授</h3>
+                <span class="featured-title">肿瘤学首席专家</span>
+                <span class="featured-department">肿瘤外科</span>
+                <span class="availability">当前可预约</span>
+                
+                <div class="featured-bio">
+                    <p>Steven教授是国内肿瘤外科领域的权威专家，拥有30年临床经验。专注于肺癌、肝癌和胃癌的微创手术治疗，在国际上发表学术论文120余篇。作为我院肿瘤中心主任，王教授引领了多项国家级研究项目，为复杂和高难度肿瘤患者提供个性化治疗方案。</p>
+                    <p>Steven教授曾在美国MD安德森癌症中心进修，并与多家国际医疗机构保持紧密合作，致力于将最新的肿瘤治疗技术引入国内。</p>
+                </div>
+                
+                <div class="doctor-stats">
+                    <div class="featured-stat">
+                        <div class="stat-value">98.5%</div>
+                        <div class="stat-label">手术成功率</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="stat-value">4.9</div>
+                        <div class="stat-label">患者评分</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="stat-value">6000+</div>
+                        <div class="stat-label">手术例数</div>
+                    </div>
+                </div>
+                
+                <div class="featured-actions">
+                    <button class="doctor-btn primary-btn">立即预约</button>
+                    <button class="doctor-btn">查看详情</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-filters">
+            <div class="search-box">
+                <input type="text" placeholder="搜索医生姓名或专长">
+                <button>搜索</button>
+            </div>
+            
+            <select class="filter-select">
+                <option value="all">所有科室</option>
+                <option value="oncology">肿瘤内科</option>
+                <option value="surgical">肿瘤外科</option>
+                <option value="radiation">放疗科</option>
+                <option value="immuno">免疫治疗科</option>
+                <option value="palliative">姑息治疗科</option>
+            </select>
+            
+            <select class="filter-select">
+                <option value="all">所有职称</option>
+                <option value="professor">教授/主任医师</option>
+                <option value="associate">副教授/副主任医师</option>
+                <option value="attending">主治医师</option>
+                <option value="resident">住院医师</option>
+            </select>
+            
+            <select class="filter-select">
+                <option value="all">预约状态</option>
+                <option value="available">可预约</option>
+                <option value="limited">名额有限</option>
+                <option value="unavailable">暂不可约</option>
+            </select>
+        </div>
+        
+        <div class="doctors-grid">
+            <div class="doctor-card">
+                <div class="doctor-image">
+                    <img src="https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg" alt="李华医生">
+                </div>
+                <div class="doctor-details">
+                    <h3 class="doctor-name">李心 博士</h3>
+                    <span class="doctor-title">副主任医师</span>
+                    <span class="doctor-department">肿瘤内科</span>
+                    <span class="availability">当前可预约</span>
+                    <p class="doctor-expertise">专长：乳腺癌、肺癌靶向治疗，免疫治疗方案定制</p>
+                    <div class="doctor-stats">
+                        <div class="stat">
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-label">评分</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">1200+</div>
+                            <div class="stat-label">门诊量</div>
+                        </div>
+                    </div>
+                    <div class="doctor-actions">
+                        <button class="doctor-btn">详情</button>
+                        <button class="doctor-btn primary-btn">预约</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="doctor-card">
+                <div class="doctor-image">
+                    <img src="https://img.freepik.com/free-photo/portrait-smiling-male-doctor_171337-1532.jpg" alt="张强医生">
+                </div>
+                <div class="doctor-details">
+                    <h3 class="doctor-name">张强 博士</h3>
+                    <span class="doctor-title">主任医师</span>
+                    <span class="doctor-department">放疗科</span>
+                    <span class="availability limited">名额有限</span>
+                    <p class="doctor-expertise">专长：精准放疗，放化疗联合治疗，质子治疗</p>
+                    <div class="doctor-stats">
+                        <div class="stat">
+                            <div class="stat-value">4.9</div>
+                            <div class="stat-label">评分</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">3000+</div>
+                            <div class="stat-label">放疗例数</div>
+                        </div>
+                    </div>
+                    <div class="doctor-actions">
+                        <button class="doctor-btn">详情</button>
+                        <button class="doctor-btn primary-btn">预约</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="doctor-card">
+                <div class="doctor-image">
+                    <img src="https://img.freepik.com/free-photo/portrait-successful-mid-adult-doctor-with-crossed-arms_1262-12865.jpg" alt="刘伟医生">
+                </div>
+                <div class="doctor-details">
+                    <h3 class="doctor-name">刘伟 博士</h3>
+                    <span class="doctor-title">主治医师</span>
+                    <span class="doctor-department">肿瘤外科</span>
+                    <span class="availability">当前可预约</span>
+                    <p class="doctor-expertise">专长：肝胆肿瘤微创手术，腹腔镜手术</p>
+                    <div class="doctor-stats">
+                        <div class="stat">
+                            <div class="stat-value">4.7</div>
+                            <div class="stat-label">评分</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">800+</div>
+                            <div class="stat-label">手术例数</div>
+                        </div>
+                    </div>
+                    <div class="doctor-actions">
+                        <button class="doctor-btn">详情</button>
+                        <button class="doctor-btn primary-btn">预约</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="doctor-card">
+                <div class="doctor-image">
+                    <img src="https://img.freepik.com/free-photo/doctor-crossing-arms-while-holding-stethoscope-white-coat_176474-8491.jpg" alt="陈静医生">
+                </div>
+                <div class="doctor-details">
+                    <h3 class="doctor-name">陈静 博士</h3>
+                    <span class="doctor-title">副主任医师</span>
+                    <span class="doctor-department">免疫治疗科</span>
+                    <span class="availability unavailable">暂不可约</span>
+                    <p class="doctor-expertise">专长：CAR-T细胞治疗，PD-1/PD-L1抑制剂治疗</p>
+                    <div class="doctor-stats">
+                        <div class="stat">
+                            <div class="stat-value">4.9</div>
+                            <div class="stat-label">评分</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">500+</div>
+                            <div class="stat-label">治疗例数</div>
+                        </div>
+                    </div>
+                    <div class="doctor-actions">
+                        <button class="doctor-btn">详情</button>
+                        <button class="doctor-btn primary-btn">候补</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="doctor-card">
+                <div class="doctor-image">
+                    <img src="https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg" alt="杨丽医生">
+                </div>
+                <div class="doctor-details">
+                    <h3 class="doctor-name">杨丽 博士</h3>
+                    <span class="doctor-title">主治医师</span>
+                    <span class="doctor-department">姑息治疗科</span>
+                    <span class="availability">当前可预约</span>
+                    <p class="doctor-expertise">专长：癌痛管理，生活质量改善，心理支持</p>
+                    <div class="doctor-stats">
+                        <div class="stat">
+                            <div class="stat-value">4.9</div>
+                            <div class="stat-label">评分</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">1500+</div>
+                            <div class="stat-label">门诊量</div>
+                        </div>
+                    </div>
+                    <div class="doctor-actions">
+                        <button class="doctor-btn">详情</button>
+                        <button class="doctor-btn primary-btn">预约</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="doctor-card">
+                <div class="doctor-image">
+                    <img src="images/zhuanjia2.jpg" alt="赵明医生">
+                </div>
+                <div class="doctor-details">
+                    <h3 class="doctor-name">赵明 博士</h3>
+                    <span class="doctor-title">主任医师</span>
+                    <span class="doctor-department">肿瘤内科</span>
+                    <span class="availability limited">名额有限</span>
+                    <p class="doctor-expertise">专长：胃肠道肿瘤，肝胆肿瘤，新药临床试验</p>
+                    <div class="doctor-stats">
+                        <div class="stat">
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-label">评分</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">2500+</div>
+                            <div class="stat-label">门诊量</div>
+                        </div>
+                    </div>
+                    <div class="doctor-actions">
+                        <button class="doctor-btn">详情</button>
+                        <button class="doctor-btn primary-btn">预约</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <button class="cyber-button" style="padding: 12px 30px; background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue)); color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);">加载更多医生</button>
+        </div>
+    </div>
+    
+    <script>
+        // 模拟在线医生和今日门诊数量的随机变化
+        function updateStats() {
+            const onlineDoctors = document.getElementById('onlineDoctors');
+            const todayAppointments = document.getElementById('todayAppointments');
+            
+            // 让数字在特定范围内随机波动，模拟实时变化
+            const currentOnline = parseInt(onlineDoctors.textContent);
+            const currentAppointments = parseInt(todayAppointments.textContent);
+            
+            // 随机增减在线医生数量，范围在13-17之间
+            let newOnline = currentOnline + (Math.random() > 0.5 ? 1 : -1);
+            if (newOnline < 13) newOnline = 13;
+            if (newOnline > 17) newOnline = 17;
+            
+            // 随机增加今日门诊量，范围在40-60之间
+            let newAppointments = currentAppointments + (Math.random() > 0.7 ? 1 : 0);
+            if (newAppointments > 60) newAppointments = 60;
+            
+            onlineDoctors.textContent = newOnline;
+            todayAppointments.textContent = newAppointments;
+            
+            setTimeout(updateStats, 5000); // 每5秒更新一次
+        }
+        
+        // 页面加载完成后启动统计数据更新
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+</body>
+</html>

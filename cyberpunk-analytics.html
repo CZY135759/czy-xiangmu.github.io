@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据分析</title>
+    <link rel="stylesheet" href="css/patient.css">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-purple: #9d00ff;
+            --neon-pink: #ff00f7;
+            --neon-green: #39ff14;
+            --dark-bg: #0f0f17;
+            --darker-bg: #070709;
+            --panel-bg: rgba(25, 25, 35, 0.7);
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(0, 255, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 75% 70%, rgba(157, 0, 255, 0.1) 0%, transparent 40%);
+            line-height: 1.6;
+        }
+        
+        .analytics-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            z-index: 1;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .panel-title {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        
+        .full-width {
+            grid-column: span 2;
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+            margin-top: 20px;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .data-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .data-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        }
+        
+        .data-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+        }
+        
+        .data-label {
+            color: #aaa;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .data-change {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        
+        .change-up {
+            background-color: rgba(57, 255, 20, 0.2);
+            color: var(--neon-green);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+        }
+        
+        .change-down {
+            background-color: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-select {
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .filter-select:focus {
+            border-color: var(--neon-blue);
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .filter-select option {
+            background: var(--darker-bg);
+        }
+        
+        .cyber-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .cyber-button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-button:hover {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>肿瘤诊疗实时查询系统</h1>
+        <nav class="main-nav">
+            <a href="index.html" style="color: rgb(214, 255, 9); text-decoration: none;">首页</a>
+            <a href="cyberpunk-dashboard.html" style="color: rgb(214, 255, 9); text-decoration: none;">主控面板</a>
+            <a href="cyberpunk-patient-profile.html" style="color: rgb(214, 255, 9); text-decoration: none;">患者资料</a>
+            <a href="prediction model.html" style="color: rgb(214, 255, 9); text-decoration: none;">预测模型</a>
+            <a href="treatment-path.html" style="color: rgb(214, 255, 9); text-decoration: none;">治疗路径</a>
+            <a href="patient.html" style="color: rgb(214, 255, 9); text-decoration: none;">医生简介</a>
+           
+        </nav>
+        <div class="showTime">当前时间：2025年1月10-0时54分14秒</div>
+        <script>
+            var t = null;
+            t = setTimeout(time, 1000);
+            function time() {
+                clearTimeout(t);
+                dt = new Date();
+                var y = dt.getFullYear();
+                var mt = dt.getMonth() + 1;
+                var day = dt.getDate();
+                var h = dt.getHours();
+                var m = dt.getMinutes();
+                var s = dt.getSeconds();
+                document.querySelector(".showTime").innerHTML =
+                    "当前时间：" +
+                    y +
+                    "年" +
+                    mt +
+                    "月" +
+                    day +
+                    "-" +
+                    h +
+                    "时" +
+                    m +
+                    "分" +
+                    s +
+                    "秒";
+                t = setTimeout(time, 1000);
+            }
+        </script>
+    </header>
+
+    <div class="analytics-container">
+        <h2 style="color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); margin-bottom: 20px;">数据分析中心</h2>
+        
+        <div class="filter-bar">
+            <select class="filter-select" id="timeRange">
+                <option value="today">今日</option>
+                <option value="week" selected>本周</option>
+                <option value="month">本月</option>
+                <option value="quarter">季度</option>
+                <option value="year">年度</option>
+            </select>
+            
+            <select class="filter-select" id="department">
+                <option value="all" selected>所有科室</option>
+                <option value="oncology">肿瘤科</option>
+                <option value="cardiology">心血管科</option>
+                <option value="neurology">神经科</option>
+                <option value="pediatrics">儿科</option>
+            </select>
+            
+            <select class="filter-select" id="dataType">
+                <option value="patients" selected>患者数据</option>
+                <option value="treatments">治疗数据</option>
+                <option value="medications">药物数据</option>
+            </select>
+        </div>
+        
+        <div class="data-grid">
+            <div class="data-card">
+                <div class="data-label">新增患者</div>
+                <div class="data-value">127</div>
+                <div class="data-change change-up">+12%</div>
+            </div>
+            
+            <div class="data-card">
+                <div class="data-label">出院患者</div>
+                <div class="data-value">94</div>
+                <div class="data-change change-up">+8%</div>
+            </div>
+            
+            <div class="data-card">
+                <div class="data-label">住院天数</div>
+                <div class="data-value">6.2</div>
+                <div class="data-change change-down">-3%</div>
+            </div>
+            
+            <div class="data-card">
+                <div class="data-label">治疗成功率</div>
+                <div class="data-value">89%</div>
+                <div class="data-change change-up">+4%</div>
+            </div>
+            
+            <div class="data-card">
+                <div class="data-label">复发率</div>
+                <div class="data-value">12%</div>
+                <div class="data-change change-down">-2%</div>
+            </div>
+        </div>
+        
+        <div class="analytics-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">患者分布情况</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="patientsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">治疗效果分析</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="treatmentsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="panel full-width">
+                <div class="panel-header">
+                    <h3 class="panel-title">治疗方案效果趋势</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">药物使用分布</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="medicationsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">科室工作量</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="departmentsChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cyber-buttons">
+            <button class="cyber-button" onclick="window.location.href='cyberpunk-dashboard.html'">返回主页</button>
+            <button class="cyber-button" onclick="exportData()">导出数据</button>
+            <button class="cyber-button" onclick="refreshData()">刷新数据</button>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 模拟导出数据功能
+        function exportData() {
+            alert('数据导出功能将在此实现');
+        }
+        
+        // 模拟刷新数据功能
+        function refreshData() {
+            alert('数据刷新中...');
+            setTimeout(() => {
+                alert('数据已刷新');
+                location.reload();
+            }, 1000);
+        }
+        
+        // 创建图表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 患者分布情况图表
+            const patientsCtx = document.getElementById('patientsChart').getContext('2d');
+            new Chart(patientsCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['肿瘤科', '心血管科', '神经科', '呼吸科', '消化科', '其他'],
+                    datasets: [{
+                        data: [45, 20, 12, 8, 10, 5],
+                        backgroundColor: [
+                            'rgba(0, 255, 255, 0.7)',
+                            'rgba(157, 0, 255, 0.7)',
+                            'rgba(255, 0, 247, 0.7)',
+                            'rgba(57, 255, 20, 0.7)',
+                            'rgba(255, 165, 0, 0.7)',
+                            'rgba(128, 128, 128, 0.7)'
+                        ],
+                        borderColor: 'rgba(25, 25, 35, 0.8)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 治疗效果分析图表
+            const treatmentsCtx = document.getElementById('treatmentsChart').getContext('2d');
+            new Chart(treatmentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['化疗', '放疗', '手术', '免疫治疗', '靶向治疗'],
+                    datasets: [{
+                        label: '有效率',
+                        data: [75, 68, 92, 83, 89],
+                        backgroundColor: 'rgba(0, 255, 255, 0.5)',
+                        borderColor: 'rgba(0, 255, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 治疗方案效果趋势图表
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    datasets: [
+                        {
+                            label: '化疗',
+                            data: [70, 72, 74, 73, 75, 76, 78, 77, 79, 80, 81, 82],
+                            borderColor: 'rgba(0, 255, 255, 1)',
+                            backgroundColor: 'rgba(0, 255, 255, 0)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        },
+                        {
+                            label: '免疫治疗',
+                            data: [65, 68, 72, 75, 78, 80, 82, 83, 85, 86, 87, 88],
+                            borderColor: 'rgba(157, 0, 255, 1)',
+                            backgroundColor: 'rgba(157, 0, 255, 0)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        },
+                        {
+                            label: '靶向治疗',
+                            data: [75, 78, 80, 83, 85, 86, 87, 88, 89, 90, 91, 92],
+                            borderColor: 'rgba(57, 255, 20, 1)',
+                            backgroundColor: 'rgba(57, 255, 20, 0)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 药物使用分布图表
+            const medicationsCtx = document.getElementById('medicationsChart').getContext('2d');
+            new Chart(medicationsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['化疗药物', '靶向药物', '免疫治疗药物', '辅助药物', '激素类药物'],
+                    datasets: [{
+                        data: [35, 25, 20, 15, 5],
+                        backgroundColor: [
+                            'rgba(0, 255, 255, 0.7)',
+                            'rgba(157, 0, 255, 0.7)',
+                            'rgba(255, 0, 247, 0.7)',
+                            'rgba(57, 255, 20, 0.7)',
+                            'rgba(255, 165, 0, 0.7)'
+                        ],
+                        borderColor: 'rgba(25, 25, 35, 0.8)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 科室工作量图表
+            const departmentsCtx = document.getElementById('departmentsChart').getContext('2d');
+            new Chart(departmentsCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['门诊量', '住院量', '手术量', '检查量', '会诊量'],
+                    datasets: [
+                        {
+                            label: '肿瘤科',
+                            data: [90, 85, 70, 95, 80],
+                            borderColor: 'rgba(0, 255, 255, 1)',
+                            backgroundColor: 'rgba(0, 255, 255, 0.2)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(0, 255, 255, 1)'
+                        },
+                        {
+                            label: '心血管科',
+                            data: [75, 80, 65, 70, 85],
+                            borderColor: 'rgba(157, 0, 255, 1)',
+                            backgroundColor: 'rgba(157, 0, 255, 0.2)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(157, 0, 255, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            pointLabels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                backdropColor: 'transparent'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

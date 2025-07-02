@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能治疗路径规划</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #10e03d;
+            background-image: url('https://via.placeholder.com/1500x800?text=Background');
+            background-size: cover;
+            background-position: center;
+        }
+        header {
+            background-color: #167decd2;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            background-image: linear-gradient(to right, #007bff, #0056b3);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .step {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: box-shadow 0.3s ease;
+        }
+        .step:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .step .icon {
+            font-size: 24px;
+            color: #007bff;
+            margin-right: 10px;
+        }
+        .step ul {
+            list-style: none;
+            padding: 0;
+        }
+        .step ul li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .step ul li:last-child {
+            border-bottom: none;
+        }
+        .arrow {
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 3px;
+            -webkit-transform: rotate(135deg);
+            -ms-transform: rotate(135deg);
+            transform: rotate(135deg);
+            margin: 0 10px;
+        }
+        .treatment-plan {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .treatment-plan h2 {
+            margin-top: 0;
+        }
+        /* Dynamic effect for the header */
+        header {
+            animation: slideInDown 2s ease-in-out;
+        }
+        @keyframes slideInDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        /* Animation for the treatment plan */
+        .treatment-plan {
+            animation: fadeInUp 2s ease-in-out;
+        }
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>智能治疗路径规划</h1>
+        <nav class="main-nav">
+            <a href="index.html" style="color: rgb(214, 255, 9); text-decoration: none;">首页</a>
+            <a href="cyberpunk-dashboard.html" style="color: rgb(214, 255, 9); text-decoration: none;">主控面板</a>
+            <a href="cyberpunk-analytics.html" style="color: rgb(214, 255, 9); text-decoration: none;">数据分析</a>
+            <a href="prediction model.html" style="color: rgb(214, 255, 9); text-decoration: none;">预测模型</a>
+            <a href="treatment-path.html" style="color: rgb(214, 255, 9); text-decoration: none;">治疗路径</a>
+            <a href="patient.html" style="color: rgb(214, 255, 9); text-decoration: none;">医生简介</a>
+            
+          </nav>
+    </header>
+    <div class="container">
+        <div class="step">
+            <div class="icon">&#10004;</div>
+            <h3>初诊评估</h3>
+            <ul>
+                <li>影像学检查</li>
+                <li>病理活检</li>
+                <li>分期评估</li>
+            </ul>
+        </div>
+        <div class="arrow"></div>
+        <div class="step">
+            <div class="icon">&#10004;</div>
+            <h3>分子分型</h3>
+            <ul>
+                <li>HER2状态</li>
+                <li>HR状态</li>
+                <li>BRCA突变</li>
+            </ul>
+        </div>
+        <div class="arrow"></div>
+        <div class="step">
+            <div class="icon">&#10004;</div>
+            <h3>治疗方案推荐</h3>
+            <div class="treatment-plan">
+                <h2>推荐治疗方案</h2>
+                <p>根据您的病情，我们推荐以下治疗方案：</p>
+                <p>1. 药物治疗方案</p>
+                <p>2. 放疗方案</p>
+                <p>3. 手术方案</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

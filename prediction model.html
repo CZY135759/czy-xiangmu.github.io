@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>肿瘤类型预测系统</title>
+    <nav class="main-nav">
+        <a href="index.html" style="color: rgb(0, 0, 0); text-decoration: none;">首页</a>
+        <a href="cyberpunk-dashboard.html" style="color: rgb(0, 0, 0); text-decoration: none;">主控面板</a>
+            <a href="cyberpunk-analytics.html" style="color: rgb(0, 0, 0); text-decoration: none;">数据分析</a>
+            <a href="prediction model.html" style="color: rgb(0, 0, 0); text-decoration: none;">预测模型</a>
+            <a href="treatment-path.html" style="color: rgb(0, 0, 0); text-decoration: none;">治疗路径</a>
+            <a href="patient.html" style="color: rgb(0, 0, 0); text-decoration: none;">医生简介</a>
+            
+      </nav>
+    <div class="showTime">当前时间：2025年1月10-0时54分14秒</div>
+        <script>
+            var t = null;
+            t = setTimeout(time, 1000); //开始运行
+            function time() {
+              clearTimeout(t); //清除定时器
+              dt = new Date();
+              var y = dt.getFullYear();
+              var mt = dt.getMonth() + 1;
+              var day = dt.getDate();
+              var h = dt.getHours(); //获取时
+              var m = dt.getMinutes(); //获取分
+              var s = dt.getSeconds(); //获取秒
+              document.querySelector(".showTime").innerHTML =
+                "当前时间：" +
+                y +
+                "年" +
+                mt +
+                "月" +
+                day +
+                "-" +
+                h +
+                "时" +
+                m +
+                "分" +
+                s +
+                "秒";
+              t = setTimeout(time, 1000); //设定定时器，循环运行
+            }
+          </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f8ff;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #7f8c8d;
+        }
+
+        /* 输入区域 */
+        .input-section {
+            margin-bottom: 2rem;
+        }
+
+        .symptom-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .symptom-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .example-text {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* 按钮样式 */
+        .analyze-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .analyze-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(52,152,219,0.3);
+        }
+
+        /* 结果展示 */
+        .result-section {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease;
+            border-left: 4px solid #3498db;
+        }
+
+        .disease-name {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            color: #e74c3c;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* 加载动画 */
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .loader div {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            margin: 0 3px;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { 
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>肿瘤类型预测系统</h1>
+            <p>基于症状分析的智能预测</p>
+        </div>
+
+        <div class="input-section">
+            <textarea 
+                class="symptom-input" 
+                placeholder="请输入症状描述（例如：持续咳嗽、体重下降、咯血...）"
+                rows="4"
+            ></textarea>
+            <p class="example-text">示例：持续胸痛 | 无痛性肿块 | 吞咽困难 | 异常出血</p>
+            <button class="analyze-btn" onclick="analyzeSymptoms()">开始分析</button>
+            <div class="loader" id="loader">
+                <div style="animation-delay: -0.32s"></div>
+                <div style="animation-delay: -0.16s"></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-card">
+                <div class="disease-name">非小细胞肺癌 <span class="confidence">置信度：78%</span></div>
+                <div class="description">
+                    <p>常见症状：持续咳嗽、胸痛、呼吸困难、咯血</p>
+                    <div class="recommendation">
+                        <strong>建议检查：</strong>
+                        <ul>
+                            <li>胸部CT扫描</li>
+                            <li>支气管镜检查</li>
+                            <li>肿瘤标志物检测</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟分析逻辑
+        function analyzeSymptoms() {
+            const loader = document.getElementById('loader');
+            const resultSection = document.getElementById('resultSection');
+            
+            // 显示加载动画
+            loader.style.display = 'block';
+            resultSection.style.display = 'none';
+
+            // 模拟分析延迟
+            setTimeout(() => {
+                loader.style.display = 'none';
+                resultSection.style.display = 'block';
+                
+                // 此处可替换为真实分析逻辑
+                generateSampleResult();
+            }, 1500);
+        }
+
+        // 生成示例结果
+        function generateSampleResult() {
+            const results = [
+                {
+                    name: "乳腺癌",
+                    confidence: "85%",
+                    symptoms: "无痛性肿块、乳头溢液、皮肤橘皮样改变",
+                    checks: ["乳腺超声", "钼靶检查", "穿刺活检"]
+                },
+                {
+                    name: "结直肠癌",
+                    confidence: "72%",
+                    symptoms: "便血、排便习惯改变、腹痛",
+                    checks: ["肠镜检查", "粪便隐血试验", "CT结肠成像"]
+                },
+                {
+                    name: "胃癌",
+                    confidence: "65%",
+                    symptoms: "上腹疼痛、食欲减退、黑便",
+                    checks: ["胃镜检查", "幽门螺杆菌检测", "肿瘤标志物"]
+                }
+            ];
+
+            const resultSection = document.getElementById('resultSection');
+            resultSection.innerHTML = '';
+
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="disease-name">${result.name} <span class="confidence">置信度：${result.confidence}</span></div>
+                    <div class="description">
+                        <p>常见症状：${result.symptoms}</p>
+                        <div class="recommendation">
+                            <strong>建议检查：</strong>
+                            <ul>
+                                ${result.checks.map(check => `<li>${check}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                resultSection.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 肿瘤诊疗实时查询系统</title>
+    <link rel="stylesheet" href="css/patient.css">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-purple: #9d00ff;
+            --neon-pink: #ff00f7;
+            --neon-green: #39ff14;
+            --dark-bg: #0f0f17;
+            --darker-bg: #070709;
+            --panel-bg: rgba(25, 25, 35, 0.7);
+        }
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            background: 
+                linear-gradient(rgba(15, 15, 23, 0.7), rgba(15, 15, 23, 0.7)),
+                url(images/bg2.jpeg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 35%, rgba(0, 255, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 75% 70%, rgba(157, 0, 255, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            padding: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: var(--panel-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            z-index: 1;
+        }
+        
+        h2 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-group {
+            position: relative;
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            padding-right: 40px;
+        }
+        
+        .cyber-button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .cyber-button:hover {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .info-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .link:hover {
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            color: var(--neon-blue);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            right: -10px;
+            top: 42px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;
+        }
+        
+        .status-indicator.valid {
+            background-color: var(--neon-green);
+            color: #000;
+        }
+        
+        .status-indicator.invalid {
+            background-color: #ff3a5e;
+            color: #fff;
+        }
+        
+        .password-strength {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 5px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .password-strength div {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        .password-strength.weak div {
+            width: 30%;
+            background: #ff3a5e;
+        }
+        
+        .password-strength.medium div {
+            width: 60%;
+            background: #ffaa00;
+        }
+        
+        .password-strength.strong div {
+            width: 100%;
+            background: var(--neon-green);
+        }
+        
+        .password-hint {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .security-level {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .security-level::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+        
+        .security-level-item {
+            width: 30px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            color: #aaa;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .security-level-item.active {
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        .verification-code {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .verification-code input {
+            width: 60%;
+        }
+        
+        .verification-code button {
+            width: 40%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            color: var(--neon-blue);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .verification-code button:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .terms-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--neon-blue);
+        }
+        
+        @keyframes neon-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 
+                    0 0 1px var(--neon-blue),
+                    0 0 2px var(--neon-blue),
+                    0 0 5px var(--neon-blue),
+                    0 0 10px var(--neon-blue);
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+        
+        .neon-flicker {
+            animation: neon-flicker 2s infinite alternate;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>肿瘤诊疗实时查询系统</h1>
+        <nav class="main-nav">
+            <a href="index.html" style="color: rgb(214, 255, 9); text-decoration: none;">首页</a>
+            <a href="cyberpunk-dashboard.html" style="color: rgb(214, 255, 9); text-decoration: none;">主控面板</a>
+            <a href="cyberpunk-analytics.html" style="color: rgb(214, 255, 9); text-decoration: none;">数据分析</a>
+            <a href="cyberpunk-patient-profile.html" style="color: rgb(214, 255, 9); text-decoration: none;">患者资料</a>
+            <a href="prediction model.html" style="color: rgb(214, 255, 9); text-decoration: none;">预测模型</a>
+            <a href="treatment-path.html" style="color: rgb(214, 255, 9); text-decoration: none;">治疗路径</a>
+            <a href="patient.html" style="color: rgb(214, 255, 9); text-decoration: none;">医生简介</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2 class="neon-flicker">创建账号</h2>
+        
+        <div class="security-level">
+            <div class="security-level-item active">1</div>
+            <div class="security-level-item">2</div>
+            <div class="security-level-item">3</div>
+        </div>
+        
+        <form id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">用户类型</label>
+                    <select id="role" name="role" required>
+                        <option value="">请选择</option>
+                        <option value="doctor">医生</option>
+                        <option value="patient">患者</option>
+                        <option value="researcher">研究员</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">邮箱</label>
+                    <input type="email" id="email" name="email" required autocomplete="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">手机号码</label>
+                    <input type="tel" id="phone" name="phone" required autocomplete="tel">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" required autocomplete="new-password">
+                    <span class="password-toggle" id="passwordToggle">显示</span>
+                    <div class="password-strength">
+                        <div></div>
+                    </div>
+                    <div class="password-hint">密码应包含大小写字母、数字和特殊字符</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password">
+                    <div class="status-indicator" id="passwordMatch"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="verificationCode">验证码</label>
+                <div class="verification-code">
+                    <input type="text" id="verificationCode" name="verificationCode" required>
+                    <button type="button" id="sendCodeBtn">发送验证码</button>
+                </div>
+            </div>
+            
+            <div class="terms-checkbox">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">我已阅读并同意<a href="#" class="link">服务条款</a>和<a href="#" class="link">隐私政策</a></label>
+            </div>
+            
+            <button type="submit" class="cyber-button">注册账号</button>
+        </form>
+        
+        <div class="info-text">
+            已有账号？<a href="login.html" class="link">立即登录</a>
+        </div>
+    </div>
+    
+    <script>
+        // 密码显示/隐藏切换
+        document.getElementById('passwordToggle').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.textContent = '隐藏';
+            } else {
+                passwordInput.type = 'password';
+                this.textContent = '显示';
+            }
+        });
+        
+        // 密码强度检测
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthMeter = this.nextElementSibling.nextElementSibling;
+            
+            // 清除现有的类
+            strengthMeter.classList.remove('weak', 'medium', 'strong');
+            
+            if (password.length === 0) {
+                return;
+            }
+            
+            // 简单的密码强度检测
+            let strength = 0;
+            if (password.length >= 8) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[a-z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            if (strength < 3) {
+                strengthMeter.classList.add('weak');
+            } else if (strength < 5) {
+                strengthMeter.classList.add('medium');
+            } else {
+                strengthMeter.classList.add('strong');
+            }
+        });
+        
+        // 密码匹配检测
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const indicator = document.getElementById('passwordMatch');
+            
+            indicator.textContent = '';
+            indicator.classList.remove('valid', 'invalid');
+            
+            if (confirmPassword.length === 0) {
+                return;
+            }
+            
+            if (password === confirmPassword) {
+                indicator.textContent = '✓';
+                indicator.classList.add('valid');
+            } else {
+                indicator.textContent = '✗';
+                indicator.classList.add('invalid');
+            }
+        });
+        
+        // 发送验证码
+        document.getElementById('sendCodeBtn').addEventListener('click', function() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('请输入邮箱地址');
+                return;
+            }
+            
+            // 模拟发送验证码
+            this.disabled = true;
+            this.textContent = '发送中...';
+            
+            setTimeout(() => {
+                this.textContent = '60s后重试';
+                
+                let countdown = 60;
+                const timer = setInterval(() => {
+                    countdown--;
+                    this.textContent = `${countdown}s后重试`;
+                    
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        this.textContent = '发送验证码';
+                        this.disabled = false;
+                    }
+                }, 1000);
+                
+                alert(`验证码已发送至 ${email}`);
+            }, 1500);
+        });
+        
+        // 表单提交
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+            
+            // 模拟注册过程
+            alert('注册成功！即将跳转到登录页面...');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        });
+    </script>
+</body>
+</html> 
